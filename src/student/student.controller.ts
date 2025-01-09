@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, Put } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Put, Delete } from '@nestjs/common';
 import { StudentService } from './student.service';
 import { Student } from './student.entity';
 
@@ -48,6 +48,20 @@ export class StudentController {
       return { message: 'Student updated successfully', student: updated };
     } catch (error) {
       return { error: 'An error occurred while updating the student.', details: error.message };
+    }
+  }
+
+  // DELETE endpoint to remove a student
+  @Delete(':id')
+  async deleteStudent(@Param('id') id: number) {
+    try {
+      const deleted = await this.studentService.remove(id);
+      if (!deleted) {
+        return { error: 'Student not found or unable to delete.' };
+      }
+      return { message: 'Student deleted successfully' };
+    } catch (error) {
+      return { error: 'An error occurred while deleting the student.', details: error.message };
     }
   }
 }

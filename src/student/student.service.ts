@@ -35,4 +35,16 @@ export class StudentService {
     Object.assign(existingStudent, student);
     return this.studentRepository.save(existingStudent);
   }
+
+  // Method to delete a student
+  async remove(id: number): Promise<boolean> {
+    const student = await this.studentRepository.findOne({
+      where: { id },
+    });
+    if (!student) {
+      return false; 
+    }
+    await this.studentRepository.remove(student);
+    return true; 
+  }
 }
