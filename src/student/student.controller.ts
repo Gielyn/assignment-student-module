@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { StudentService } from './student.service';
 import { Student } from './student.entity';
 
@@ -17,11 +17,24 @@ export class StudentController {
         student: newStudent,
       };
     } catch (error) {
-      // Handling errors gracefully
       return {
         error: 'An error occurred while creating the student.',
         details: error.message,
       };
+    }
+  }
+
+  // GET endpoint to retrieve a student by ID
+  @Get(':id')
+  async getStudentById(@Param('id') id: number) {
+    try {
+      const student = await this.studentService.findOne(id);
+      if (!student) {
+        return { error: 'Student not found.' };
+      }
+      return { student };
+    } catch (error) {
+      return { error: 'An error occurred while fetching the student.', details: error.message };
     }
   }
 }

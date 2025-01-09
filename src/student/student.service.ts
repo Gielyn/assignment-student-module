@@ -16,5 +16,10 @@ export class StudentService {
     return this.studentRepository.save(newStudent);
   }
 
-  // Other CRUD methods (optional)
+  // Method to find a student by ID (updated)
+  async findOne(id: number): Promise<Student | null> {
+    return this.studentRepository.findOne({
+      where: { id },
+    });
+  }
 }
