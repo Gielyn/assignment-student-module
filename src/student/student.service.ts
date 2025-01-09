@@ -22,4 +22,17 @@ export class StudentService {
       where: { id },
     });
   }
+
+  // Method to update a student by ID
+  async update(id: number, student: Partial<Student>): Promise<Student> {
+    const existingStudent = await this.studentRepository.findOne({
+      where: { id },
+    });
+    if (!existingStudent) {
+      throw new Error('Student not found');
+    }
+
+    Object.assign(existingStudent, student);
+    return this.studentRepository.save(existingStudent);
+  }
 }

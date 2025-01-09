@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Put } from '@nestjs/common';
 import { StudentService } from './student.service';
 import { Student } from './student.entity';
 
@@ -10,7 +10,6 @@ export class StudentController {
   @Post()
   async createStudent(@Body() student: Partial<Student>) {
     try {
-      // Calling the service method to create a new student
       const newStudent = await this.studentService.create(student);
       return {
         message: 'Student created successfully',
@@ -35,6 +34,20 @@ export class StudentController {
       return { student };
     } catch (error) {
       return { error: 'An error occurred while fetching the student.', details: error.message };
+    }
+  }
+
+  // PUT endpoint to update a student's information
+  @Put(':id')
+  async updateStudent(@Param('id') id: number, @Body() updatedStudent: Partial<Student>) {
+    try {
+      const updated = await this.studentService.update(id, updatedStudent);
+      if (!updated) {
+        return { error: 'Student not found or unable to update.' };
+      }
+      return { message: 'Student updated successfully', student: updated };
+    } catch (error) {
+      return { error: 'An error occurred while updating the student.', details: error.message };
     }
   }
 }
